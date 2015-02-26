@@ -17,8 +17,8 @@ WaterSteamEOSApp::WaterSteamEOSApp(const std::string & name, InputParameters par
 {
   srand(processor_id());
 
-  Moose::registerObjects(_factory);
-  WaterSteamEOSApp::registerObjects(_factory);
+  Moose::registerObjects(*_factory);
+  WaterSteamEOSApp::registerObjects(*_factory);
 
   Moose::associateSyntax(_syntax, _action_factory);
   WaterSteamEOSApp::associateSyntax(_syntax, _action_factory);

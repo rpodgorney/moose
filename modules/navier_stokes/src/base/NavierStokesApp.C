@@ -87,8 +87,8 @@ NavierStokesApp::NavierStokesApp(const std::string & name, InputParameters param
 {
   srand(processor_id());
 
-  Moose::registerObjects(_factory);
-  NavierStokesApp::registerObjects(_factory);
+  Moose::registerObjects(*_factory);
+  NavierStokesApp::registerObjects(*_factory);
 
   Moose::associateSyntax(_syntax, _action_factory);
   NavierStokesApp::associateSyntax(_syntax, _action_factory);

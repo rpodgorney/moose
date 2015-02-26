@@ -37,8 +37,8 @@ ContactApp::ContactApp(const std::string & name, InputParameters parameters) :
 {
   srand(processor_id());
 
-  Moose::registerObjects(_factory);
-  ContactApp::registerObjects(_factory);
+  Moose::registerObjects(*_factory);
+  ContactApp::registerObjects(*_factory);
 
   Moose::associateSyntax(_syntax, _action_factory);
   ContactApp::associateSyntax(_syntax, _action_factory);

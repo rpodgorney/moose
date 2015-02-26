@@ -33,8 +33,8 @@ MiscApp::MiscApp(const std::string & name, InputParameters parameters) :
 {
   srand(processor_id());
 
-  Moose::registerObjects(_factory);
-  MiscApp::registerObjects(_factory);
+  Moose::registerObjects(*_factory);
+  MiscApp::registerObjects(*_factory);
 
   Moose::associateSyntax(_syntax, _action_factory);
   MiscApp::associateSyntax(_syntax, _action_factory);

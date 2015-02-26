@@ -98,8 +98,8 @@ RichardsApp::RichardsApp(const std::string & name, InputParameters parameters) :
 {
   srand(processor_id());
 
-  Moose::registerObjects(_factory);
-  RichardsApp::registerObjects(_factory);
+  Moose::registerObjects(*_factory);
+  RichardsApp::registerObjects(*_factory);
 
   Moose::associateSyntax(_syntax, _action_factory);
   RichardsApp::associateSyntax(_syntax, _action_factory);

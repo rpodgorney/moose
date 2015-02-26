@@ -38,8 +38,8 @@ HeatConductionApp::HeatConductionApp(const std::string & name, InputParameters p
 {
   srand(processor_id());
 
-  Moose::registerObjects(_factory);
-  HeatConductionApp::registerObjects(_factory);
+  Moose::registerObjects(*_factory);
+  HeatConductionApp::registerObjects(*_factory);
 
   Moose::associateSyntax(_syntax, _action_factory);
   HeatConductionApp::associateSyntax(_syntax, _action_factory);

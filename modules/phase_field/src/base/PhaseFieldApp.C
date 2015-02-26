@@ -81,8 +81,8 @@ PhaseFieldApp::PhaseFieldApp(const std::string & name, InputParameters parameter
 {
   srand(processor_id());
 
-  Moose::registerObjects(_factory);
-  PhaseFieldApp::registerObjects(_factory);
+  Moose::registerObjects(*_factory);
+  PhaseFieldApp::registerObjects(*_factory);
 
   Moose::associateSyntax(_syntax, _action_factory);
   PhaseFieldApp::associateSyntax(_syntax, _action_factory);

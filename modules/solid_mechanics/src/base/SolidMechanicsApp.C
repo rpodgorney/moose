@@ -84,8 +84,8 @@ SolidMechanicsApp::SolidMechanicsApp(const std::string & name, InputParameters p
 {
   srand(processor_id());
 
-  Moose::registerObjects(_factory);
-  SolidMechanicsApp::registerObjects(_factory);
+  Moose::registerObjects(*_factory);
+  SolidMechanicsApp::registerObjects(*_factory);
 
   Moose::associateSyntax(_syntax, _action_factory);
   SolidMechanicsApp::associateSyntax(_syntax, _action_factory);
