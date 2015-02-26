@@ -331,6 +331,11 @@ MaterialPropertyStorage::swap(MaterialData & material_data, const Elem & elem, u
 {
   Threads::spin_mutex::scoped_lock lock(Threads::spin_mtx);
 
+  if (!props().contains(&elem))
+    mooseError("Element " << elem.id() << " is not in the data structure");
+
+
+
   shallowCopyData(_stateful_prop_id_to_prop_id, material_data.props(), props()[&elem][side]);
   shallowCopyData(_stateful_prop_id_to_prop_id, material_data.propsOld(), propsOld()[&elem][side]);
   if (hasOlderProperties())

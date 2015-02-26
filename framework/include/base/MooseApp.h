@@ -205,10 +205,14 @@ public:
    */
   bool & useNonlinear() { return _use_nonlinear; }
 
+  ///@{
   /**
-   * Retrieve the Factory associated with this App.
+   * Retrieve the Factory associated with this App. We return a reference for most objects, but
+   * a second version to return the shared pointer is available for use with Application objects.
    */
-  Factory & getFactory() { return _factory; }
+  Factory & getFactory() { return *_factory; }
+  MooseSharedPointer<Factory> getFactoryPtr() { return _factory; }
+  ///@}
 
   /**
    * Retrieve the ActionFactory associated with this App.
@@ -334,6 +338,9 @@ protected:
   /// The MPI communicator this App is going to use
   const MooseSharedPointer<Parallel::Communicator> _comm;
 
+  /// The factory object used to construct all MooseObject derived objects
+  MooseSharedPointer<Factory> _factory;
+
   /// Input file name used
   std::string _input_filename;
 
@@ -387,8 +394,6 @@ protected:
 
   /// Indicates whether warnings, errors, or no output is displayed when unused parameters are detected
   enum UNUSED_CHECK { OFF, WARN_UNUSED, ERROR_UNUSED } _enable_unused_check;
-
-  Factory _factory;
 
   /// Indicates whether warnings or errors are displayed when overridden parameters are detected
   bool _error_overridden;

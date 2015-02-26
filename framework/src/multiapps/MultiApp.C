@@ -393,6 +393,9 @@ MultiApp::createApp(unsigned int i, Real start_time)
 
   InputParameters app_params = AppFactory::instance().getValidParams(_app_type);
   app_params.set<FEProblem *>("_parent_fep") = _fe_problem;
+
+  // Set the factory pointer so that the Multiapp can use the same factory as the master app
+  app_params.set<MooseSharedPointer<Factory> >("_factory") = _app.getFactoryPtr();
   app_params.set<MooseSharedPointer<CommandLine> >("_command_line") = _app.commandLine();
   MooseApp * app = AppFactory::instance().create(_app_type, full_name, app_params, _my_comm);
   _apps[i] = app;
@@ -428,8 +431,13 @@ MultiApp::createApp(unsigned int i, Real start_time)
 
   // Update the MultiApp level for the app that was just created
   app->getOutputWarehouse().multiappLevel() = _app.getOutputWarehouse().multiappLevel() + 1;
+
+  // Set the shared Factory pointer to point to the MultiApp instance
+  app->getFactory().setApplicationPtr(app);
   app->setupOptions();
   app->runInputFile();
+  // Reset the shared Factory pointer back to the master instance
+  app->getFactory().setApplicationPtr(&_app);
 }
 
 void

@@ -80,6 +80,7 @@ InputParameters validParams<MooseApp>()
   params.addPrivateParam<char**>("_argv");
   params.addPrivateParam<MooseSharedPointer<CommandLine> >("_command_line");
   params.addPrivateParam<MooseSharedPointer<Parallel::Communicator> >("_comm");
+  params.addPrivateParam<MooseSharedPointer<Factory> >("_factory");
 
   return params;
 }
@@ -106,6 +107,7 @@ MooseApp::MooseApp(const std::string & name, InputParameters parameters) :
     _name(name),
     _pars(parameters),
     _comm(getParam<MooseSharedPointer<Parallel::Communicator> >("_comm")),
+    _factory(getParam<MooseSharedPointer<Factory> >("_factory")),
     _output_position_set(false),
     _start_time_set(false),
     _start_time(0.0),
@@ -117,7 +119,6 @@ MooseApp::MooseApp(const std::string & name, InputParameters parameters) :
     _parser(*this, _action_warehouse),
     _use_nonlinear(true),
     _enable_unused_check(WARN_UNUSED),
-    _factory(*this),
     _error_overridden(false),
     _ready_to_exit(false),
     _initial_from_file(false),
@@ -425,6 +426,9 @@ MooseApp::legacyUoInitializationDefault()
 void
 MooseApp::run()
 {
+  // Tell the factory which MOOSE app to store objects into
+  _factory->setApplicationPtr(this);
+
   setupOptions();
   runInputFile();
   executeExecutioner();

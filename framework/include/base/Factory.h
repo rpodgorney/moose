@@ -125,7 +125,7 @@ MooseObjectPtr buildObject(const std::string & name, InputParameters parameters)
 class Factory
 {
 public:
-  Factory(MooseApp & app);
+  Factory();
   virtual ~Factory();
 
   /**
@@ -140,8 +140,9 @@ public:
       _name_to_build_pointer[obj_name] = &buildObject<T>;
       _name_to_params_pointer[obj_name] = &validParams<T>;
     }
-    else
-      mooseError("Object '" + obj_name + "' already registered.");
+// TODO: Need to decide how to detect duplicate registration...
+//    else
+//      mooseError("Object '" + obj_name + "' already registered.");
   }
 
   /**
@@ -201,6 +202,11 @@ public:
    */
   registeredMooseObjectIterator registeredObjectsEnd() { return _name_to_params_pointer.end(); }
 
+  /**
+   * Sets the application pointer. This must be valid before any objects are created.
+   */
+  void setApplicationPtr(MooseApp * app_ptr);
+
 protected:
 
   /**
@@ -216,9 +222,6 @@ protected:
    */
   void deprecatedMessage(const std::string obj_name);
 
-  /// Reference to the application
-  MooseApp & _app;
-
   /// Storage for pointers to the object
   std::map<std::string, buildPtr> _name_to_build_pointer;
 
@@ -233,6 +236,9 @@ protected:
 
   /// Object id count
   MooseObjectID _object_count;
+
+  /// Pointer to the Application instance that this factory instance is creating objects within
+  MooseApp * _app_ptr;
 };
 
 #endif /* FACTORY_H */

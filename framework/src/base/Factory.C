@@ -15,8 +15,7 @@
 #include "Factory.h"
 #include "MooseApp.h"
 
-Factory::Factory(MooseApp & app):
-    _app(app),
+Factory::Factory():
     _object_count(0)
 {
 }
@@ -41,13 +40,16 @@ Factory::getValidParams(const std::string & obj_name)
   // Return the parameters
   paramsPtr & func = it->second;
   InputParameters params = (*func)();
-  params.addPrivateParam("_moose_app", &_app);
   return params;
 }
 
 MooseObjectPtr
 Factory::create(const std::string & obj_name, const std::string & name, InputParameters parameters)
 {
+  if (!_app_ptr)
+    mooseError("Error while creating \"" << name << "\" of type \"" << obj_name << "\"\n"
+               << "The Factory cannot create objects without a valid Application instance.\n");
+
   std::map<std::string, buildPtr>::iterator it = _name_to_build_pointer.find(obj_name);
 
   // Check if the object is registered
@@ -64,6 +66,9 @@ Factory::create(const std::string & obj_name, const std::string & name, InputPar
 
   // Increment object counter
   _object_count++;
+
+  // Set the MooseApp pointer that will be stored in this objects MooseObject base class
+  parameters.addPrivateParam("_moose_app", _app_ptr);
 
   // Actually call the function pointer.  You can do this in one line,
   // but it's a bit more obvious what's happening if you do it in two...
@@ -142,4 +147,10 @@ void Factory::deprecatedMessage(const std::string obj_name)
     // Produce the error message
     mooseDoOnce(mooseWarning(msg.str()));
   }
+}
+
+void
+Factory::setApplicationPtr(MooseApp * app_ptr)
+{
+  _app_ptr = app_ptr;
 }
